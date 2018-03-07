@@ -14,6 +14,11 @@ infix operator |>: AdditionPrecedence
 public struct Lens<Whole, Part> {
     public let view: (Whole) -> Part
     public let set: (Part, Whole) -> Whole
+    
+    public init (view: @escaping (Whole) -> Part, set: @escaping (Part, Whole) -> Whole) {
+        self.view = view
+        self.set = set
+    }
 }
 
 public func * <A, B, C> (lhs: Lens<A, B>, rhs: Lens<B, C>) -> Lens<A, C> {
