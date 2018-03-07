@@ -12,8 +12,8 @@ infix operator *~: MultiplicationPrecedence
 infix operator |>: AdditionPrecedence
 
 public struct Lens<Whole, Part> {
-    let view: (Whole) -> Part
-    let set: (Part, Whole) -> Whole
+    public let view: (Whole) -> Part
+    public let set: (Part, Whole) -> Whole
 }
 
 public func * <A, B, C> (lhs: Lens<A, B>, rhs: Lens<B, C>) -> Lens<A, C> {
