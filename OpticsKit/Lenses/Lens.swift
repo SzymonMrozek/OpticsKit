@@ -19,7 +19,21 @@ precedencegroup FunctionCompositionPrecedence {
     higherThan: LeftApplyPrecedence
 }
 
-infix operator *~: MultiplicationPrecedence
+precedencegroup LensCompositionPrecedence {
+    associativity: right
+    higherThan: LensSetPrecedence
+}
+
+precedencegroup LensSetPrecedence {
+    associativity: left
+    higherThan: FunctionCompositionPrecedence
+}
+
+/// Lens set
+infix operator .~ : LensSetPrecedence
+
+/// Lens composition
+infix operator .. : LensCompositionPrecedence
 
 /// Compose forward operator
 infix operator >>> : FunctionCompositionPrecedence
@@ -40,14 +54,14 @@ public struct Lens<Whole, Part> {
     }
 }
 
-public func * <A, B, C> (lhs: Lens<A, B>, rhs: Lens<B, C>) -> Lens<A, C> {
+public func .. <A, B, C> (lhs: Lens<A, B>, rhs: Lens<B, C>) -> Lens<A, C> {
     return Lens<A, C>(
         view: { a in rhs.view(lhs.view(a)) },
         set: { (c, a) in lhs.set(rhs.set(c, lhs.view(a)), a) }
     )
 }
 
-public func *~ <A, B> (lhs: Lens<A, B>, rhs: B) -> (A) -> A {
+public func .~ <A, B> (lhs: Lens<A, B>, rhs: B) -> (A) -> A {
     return { a in lhs.set(rhs, a) }
 }
 
